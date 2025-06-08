@@ -1,0 +1,444 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran | Konfirmasi via WhatsApp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #25D366;
+            --primary-dark: #128C7E;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        * {>
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+        }
+        
+        .logo {
+            font-weight: 600;
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .order-summary {
+            margin-bottom: 2rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+        }
+        
+        .payment-methods {
+            margin-top: 2rem;
+        }
+        
+        .method-tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .method-content {
+            display: none;
+        }
+        
+        .method-content.active {
+            display: block;
+        }
+        
+        .payment-detail {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .payment-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px dashed var(--primary);
+            text-align: center;
+        }
+        
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 auto;
+        }
+        
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .bank-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .bank-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .bank-item:hover {
+            border-color: var(--primary);
+        }
+        
+        .bank-item.active {
+            border-color: var(--primary);
+            background: #e5f7ed;
+        }
+        
+        .bank-logo {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+        
+        .bank-name {
+            font-weight: 500;
+        }
+        
+        .note-box {
+            background: #fff7ed;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .note-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--warning);
+        }
+        
+        .whatsapp-section {
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .whatsapp-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 640px) {
+            .bank-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .method-tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-bottom: none;
+                border-left: 2px solid transparent;
+            }
+            
+            .tab.active {
+                border-bottom: none;
+                border-left: 2px solid var(--primary);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">PembayaranKu</div>
+            <p>Konfirmasi pembayaran via WhatsApp</p>
+        </div>
+            
+            <div class="payment-methods">
+                <h1>Instruksi Pembayaran</h1>
+                
+                <div class="method-tabs">
+                    <div class="tab active" onclick="openMethod('ewallet')">E-Wallet</div>
+                    <div class="tab" onclick="openMethod('qris')">QRIS</div>
+                    <div class="tab" onclick="openMethod('bank')">Transfer Bank</div>
+                </div>
+                
+                <div id="ewallet" class="method-content active">
+                    <div class="payment-detail">
+                        <h3><i class="fab fa-google-wallet"></i> Dana</h3>
+                        <p>Nomor Tujuan Pembayaran:</p>
+                        <div class="payment-number" id="dana-number">Isi Nomor</div>
+                        <p>a.n. BAYAR SEKARANG</p>
+                        <button class="copy-btn" onclick="copyToClipboard('dana-number')">
+                            <i class="far fa-copy"></i> Salin Nomor
+                        </button>
+                    </div>
+                    
+                    <div class="payment-detail">
+                        <h3><i class="fas fa-wallet"></i> Gopay</h3>
+                        <p>Nomor Tujuan Pembayaran:</p>
+                        <div class="payment-number" id="gopay-number">Isi Nomor</div>
+                        <p>a.n. BAYAR SEKARANG</p>
+                        <button class="copy-btn" onclick="copyToClipboard('gopay-number')">
+                            <i class="far fa-copy"></i> Salin Nomor
+                        </button>
+                    </div>
+                    
+                    <div class="payment-detail">
+                        <h3><i class="fas fa-mobile-alt"></i> OVO</h3>
+                        <p>Nomor Tujuan Pembayaran:</p>
+                        <div class="payment-number" id="ovo-number">Isi Nomor</div>
+                        <p>a.n. BAYAR SEKARANG</p>
+                        <button class="copy-btn" onclick="copyToClipboard('ovo-number')">
+                            <i class="far fa-copy"></i> Salin Nomor
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="qris" class="method-content">
+                    <div class="payment-detail" style="text-align: center;">
+                        <h3><i class="fas fa-qrcode"></i> QRIS</h3>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://example.com/pay/12345" 
+                             alt="QR Code Pembayaran" 
+                             style="width: 200px; height: 200px; margin: 1rem auto; display: block;">
+                        <p>Scan QR Code di atas menggunakan aplikasi mobile banking atau e-wallet Anda</p>
+                    </div>
+                </div>
+                
+                <div id="bank" class="method-content">
+                    <div class="payment-detail">
+                        <h3><i class="fas fa-university"></i> Transfer Bank</h3>
+                        <p>Pilih bank tujuan:</p>
+                        
+                        <div class="bank-list">
+                            <div class="bank-item" onclick="selectBank('bca')">
+                                <img src="https://logo.clearbit.com/bca.co.id" alt="BCA" class="bank-logo">
+                                <span class="bank-name">BCA</span>
+                            </div>
+                            <div class="bank-item" onclick="selectBank('bri')">
+                                <img src="https://logo.clearbit.com/bri.co.id" alt="BRI" class="bank-logo">
+                                <span class="bank-name">BRI</span>
+                            </div>
+                            <div class="bank-item" onclick="selectBank('mandiri')">
+                                <img src="https://logo.clearbit.com/bankmandiri.co.id" alt="Mandiri" class="bank-logo">
+                                <span class="bank-name">Mandiri</span>
+                            </div>
+                            <div class="bank-item" onclick="selectBank('bni')">
+                                <img src="https://logo.clearbit.com/bni.co.id" alt="BNI" class="bank-logo">
+                                <span class="bank-name">BNI</span>
+                            </div>
+                        </div>
+                        
+                        <div id="bank-detail" style="display: none;">
+                            <p style="margin-top: 1rem;">Rekening Tujuan:</p>
+                            <div class="payment-number" id="bank-number">1234567890</div>
+                            <p>a.n. BAYAR SEKARANG</p>
+                            <button class="copy-btn" onclick="copyToClipboard('bank-number')">
+                                <i class="far fa-copy"></i> Salin Nomor Rekening
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note-box">
+                    <div class="note-title">INSTRUKSI PENTING</div>
+                    <p>1. Transfer sesuai jumlah tepat </p>
+                    <p>2. Simpan bukti transfer/nota pembayaran</p>
+                    <p>3. Konfirmasi pembayaran via WhatsApp dengan mengirim:</p>
+                    <p>- Pesanan: <strong>Nama produk</strong></p>
+                    <p>- Nama lengkap Anda</p>
+                    <p>- Bukti transfer (screenshot/foto)</p>
+                </div>
+                
+                <div class="whatsapp-section">
+                    <a href="https://wa.me/6281234567890?text=Halo%20admin,%20saya%20sudah%20transfer%20untuk%20pesanan%20%23INV20230001" 
+                       class="whatsapp-btn" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Konfirmasi via WhatsApp
+                    </a>
+                    <p style="margin-top: 1rem; color: #64748b;">Admin: Isi Nomor (Jam kerja 09:00-17:00 WIB)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            © 2023 PembayaranKu. Proses verifikasi 1x24 jam setelah konfirmasi.
+        </div>
+    </div>
+    
+    <script>
+        function openMethod(methodName) {
+            // Hide all method contents
+            const contents = document.querySelectorAll('.method-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected method content
+            document.getElementById(methodName).classList.add('active');
+            
+            // Update active tab
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+        
+        function selectBank(bank) {
+            // Remove active class from all bank items
+            const bankItems = document.querySelectorAll('.bank-item');
+            bankItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to selected bank
+            event.currentTarget.classList.add('active');
+            
+            // Show bank details
+            const bankDetail = document.getElementById('bank-detail');
+            bankDetail.style.display = 'block';
+            
+            // Update bank number based on selection
+            const bankNumber = document.getElementById('bank-number');
+            switch(bank) {
+                case 'bca':
+                    bankNumber.textContent = 'Isi Nomor (BCA)';
+                    break;
+                case 'bri':
+                    bankNumber.textContent = 'Isi Nomor (BRI)';
+                    break;
+                case 'mandiri':
+                    bankNumber.textContent = Isi Nomor (Mandiri)';
+                    break;
+                case 'bni':
+                    bankNumber.textContent = 'Isi nomor (BNI)';
+                    break;
+            }
+        }
+        
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Nomor berhasil disalin: ' + text);
+            }).catch(err => {
+                console.error('Gagal menyalin: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
